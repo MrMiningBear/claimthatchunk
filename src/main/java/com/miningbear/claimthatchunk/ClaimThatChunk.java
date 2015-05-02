@@ -1,12 +1,15 @@
 package com.miningbear.claimthatchunk;
 
+import java.io.IOException;
+
 import net.minecraftforge.common.MinecraftForge;
 
-import com.miningbear.claimthatchunk.commands.CommandAddMember;
-import com.miningbear.claimthatchunk.commands.CommandClaimLand;
-import com.miningbear.claimthatchunk.commands.CommandListMembers;
-import com.miningbear.claimthatchunk.commands.CommandRemoveMember;
-import com.miningbear.claimthatchunk.commands.CommandUnclaimLand;
+import com.miningbear.claimthatchunk.commands.user.CommandAddMember;
+import com.miningbear.claimthatchunk.commands.user.CommandChunkMembers;
+import com.miningbear.claimthatchunk.commands.user.CommandChunkInfo;
+import com.miningbear.claimthatchunk.commands.user.CommandClaimChunk;
+import com.miningbear.claimthatchunk.commands.user.CommandRemoveMember;
+import com.miningbear.claimthatchunk.commands.user.CommandUnclaimChunk;
 import com.miningbear.claimthatchunk.handlers.events.PlayerEventHandler;
 import com.miningbear.claimthatchunk.handlers.events.WorldEventHandler;
 import com.miningbear.claimthatchunk.lib.Constants;
@@ -26,12 +29,13 @@ public class ClaimThatChunk {
 	WorldEventHandler worldEvents = new WorldEventHandler();
 
 	@EventHandler
-	public void serverLoad(FMLServerStartingEvent event) {
-		event.registerServerCommand(new CommandClaimLand());
-		event.registerServerCommand(new CommandUnclaimLand());
+	public void serverLoad(FMLServerStartingEvent event) throws ClassNotFoundException, IOException {
+		event.registerServerCommand(new CommandClaimChunk());
+		event.registerServerCommand(new CommandUnclaimChunk());
 		event.registerServerCommand(new CommandAddMember());
 		event.registerServerCommand(new CommandRemoveMember());
-		event.registerServerCommand(new CommandListMembers());
+		event.registerServerCommand(new CommandChunkMembers());
+		event.registerServerCommand(new CommandChunkInfo());
 		
 		Constants.data.loadData();
 

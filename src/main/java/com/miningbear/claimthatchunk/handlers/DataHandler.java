@@ -23,7 +23,7 @@ public class DataHandler {
 			ChunkData cd = this.chunkData.get(i);
 			
 			if ( cd.getChunkX() == chunkX && cd.getChunkZ() == chunkZ && cd.getDimension() == player.dimension ) {
-				if (cd.getOwner() == player.getDisplayName()) {
+				if (cd.getOwner().equalsIgnoreCase(player.getDisplayName())) {
 					this.reason = "You already own this chunk!";
 				} else {
 					this.reason = "Someone else already owns this chunk!";
@@ -48,7 +48,7 @@ public class DataHandler {
 			ChunkData cd = this.chunkData.get(i);
 			
 			if ( cd.getChunkX() == chunkX && cd.getChunkZ() == chunkZ && cd.getDimension() == player.dimension ) {
-				if (cd.getOwner() == player.getDisplayName()) {
+				if (cd.getOwner().equalsIgnoreCase(player.getDisplayName())) {
 					this.chunkData.remove(i);
 					return true;
 				} else {
@@ -67,7 +67,7 @@ public class DataHandler {
 			ChunkData cd = this.chunkData.get(i);
 			
 			if ( cd.getChunkX() == chunkX && cd.getChunkZ() == chunkZ && cd.getDimension() == player.dimension ) {
-				if (cd.getOwner() == player.getDisplayName() ) {
+				if (cd.getOwner().equalsIgnoreCase(player.getDisplayName())) {
 					if ( cd.addMember(playername) ) {
 						this.chunkData.set(i, cd);
 						return true;
@@ -91,7 +91,7 @@ public class DataHandler {
 			ChunkData cd = this.chunkData.get(i);
 			
 			if ( cd.getChunkX() == chunkX && cd.getChunkZ() == chunkZ && cd.getDimension() == player.dimension ) {
-				if (cd.getOwner() == player.getDisplayName()) {
+				if (cd.getOwner().equalsIgnoreCase(player.getDisplayName())) {
 					if ( cd.removeMember(playername) ) {
 						this.chunkData.set(i, cd);
 						return true;
@@ -123,56 +123,32 @@ public class DataHandler {
 		return null;
 	}
 		
-	public void loadData() {
+	public void loadData() throws IOException, ClassNotFoundException {
 		File f = new File("data/protectedchunks.db");
 		if ( f.exists() ) {
-			try {
-				FileInputStream f_in = new FileInputStream("data/protectedchunks.db");
-
-				try {
-					ObjectInputStream obj_in = new ObjectInputStream (f_in);
-
-					try {
-						Object obj = obj_in.readObject();
-						
-						this.chunkData = (List<ChunkData>)obj;
-						
-						obj_in.close();
-						f_in.close();
-					} catch (ClassNotFoundException e) {
-						e.printStackTrace();
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
+			ObjectInputStream obj_in = new ObjectInputStream (new FileInputStream("data/protectedchunks.db"));
+					
+			this.chunkData = (List<ChunkData>)obj_in.readObject();
+			
+			obj_in.close();
 		}
 	}
 
-	public void saveData() {
+	public void saveData() throws IOException {
 		File f = new File("data/");
 		if ( !f.exists() ) {
 			f.mkdir();
 		}
 		
-		try {
-			FileOutputStream f_out = new FileOutputStream("data/protectedchunks.db");
-			try {
-				ObjectOutputStream obj_out = new ObjectOutputStream (f_out);
-				
-				obj_out.writeObject ( this.chunkData );
-
-				obj_out.close();
-				f_out.close();				
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+		f = new File("data/protectedchunks.db");
+		if (f.exists()) {
+			f.delete();
 		}
+		
+		ObjectOutputStream obj_out = new ObjectOutputStream(new FileOutputStream("data/protectedchunks.db"));
+		
+		obj_out.writeObject( this.chunkData );
+		obj_out.close();
 	}
 	
 	public boolean canBuild( double chunkX, double chunkZ, EntityPlayer player ) {
@@ -180,7 +156,7 @@ public class DataHandler {
 			ChunkData cd = this.chunkData.get(i);
 			
 			if ( cd.getChunkX() == chunkX && cd.getChunkZ() == chunkZ && cd.getDimension() == player.dimension ) {
-				if (cd.getOwner() == player.getDisplayName()) {
+				if (cd.getOwner().equalsIgnoreCase(player.getDisplayName())) {
 					return true;
 				}
 				else if (cd.isMember(player.getDisplayName()) != -1) {
@@ -192,11 +168,22 @@ public class DataHandler {
 			}
 		}
 		
-		//return false;
 		return true;
 	}
 	
 	public String getReason() {
 		return this.reason;
+	}
+
+	public String getChunkOwner(double chunkX, double chunkZ, EntityPlayer player) {
+		for (int i=0; i<this.chunkData.size(); i++) {
+			ChunkData cd = this.chunkData.get(i);
+			
+			if ( cd.getChunkX() == chunkX && cd.getChunkZ() == chunkZ && cd.getDimension() == player.dimension ) {
+				return cd.getOwner();
+			}
+		}
+		
+		return null;
 	}
 }

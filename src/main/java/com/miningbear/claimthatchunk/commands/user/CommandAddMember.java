@@ -1,4 +1,4 @@
-package com.miningbear.claimthatchunk.commands;
+package com.miningbear.claimthatchunk.commands.user;
 
 import java.util.ArrayList;
 import java.util.List;

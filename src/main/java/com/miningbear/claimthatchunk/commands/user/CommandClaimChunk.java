@@ -1,4 +1,4 @@
-package com.miningbear.claimthatchunk.commands;
+package com.miningbear.claimthatchunk.commands.user;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,24 +14,22 @@ import net.minecraft.util.EnumChatFormatting;
 
 import com.miningbear.claimthatchunk.lib.Constants;
 
-public class CommandClaimLand extends CommandBase {
+public class CommandClaimChunk extends CommandBase {
 	private List aliases;
 
-	public CommandClaimLand() {
+	public CommandClaimChunk() {
 		this.aliases = new ArrayList();
-		this.aliases.add("claimland");
-		this.aliases.add("cl");
-		this.aliases.add("claim");
+		this.aliases.add("claimchunk");
 	}
 
 	@Override
 	public String getCommandName() {
-		return "claimland";
+		return "claimchunk";
 	}
 
 	@Override
 	public String getCommandUsage(ICommandSender icommandsender) {
-		return "/claimland";
+		return "/claimchunk";
 	}
 
 	@Override
